@@ -1,33 +1,31 @@
-import React, { useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { PlusCircle } from "lucide-react";
-import { createListing } from "../services/listingService";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { PlusCircle, Server, ServerIcon } from "lucide-react";
+import { getListingById, updateListing } from "../services/listingService";
 
-const NewListing = () => {
-    
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    location: "",
-    price: "",
-    image: "",
-  });
+const EditForm = () => {
+  const { id } = useParams();
+  const [formData, setFormData] = useState({});
+  const navigate= useNavigate();
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      const listing = await getListingById(id);
+      setFormData(listing);
+    };
+    fetchData();
+  }, [id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-     createListing(formData);
-      navigate("/"); 
-      alert("Listing created successfully!");
-    } catch (err) {
-      alert("Failed to create listing."+ err);
-    }
+     await updateListing(id, formData);
+    console.log("updated listing : ");
+    alert("Listing is updated successfully")
+    navigate("/");
+  }
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   return (
@@ -35,13 +33,14 @@ const NewListing = () => {
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl p-8 relative overflow-hidden">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
-          <PlusCircle className="h-6 w-6 text-[rgb(249,50,54)]" />
+          {/* {icon to with better visual not a plusCircle icon} */}
+          <ServerIcon className=" " />
           <h1 className="text-2xl font-semibold text-gray-800">
-            Create a New Listing
+            Update Your Listing
           </h1>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={(e) => handleSubmit(e)} className="space-y-5">
           {/* Title */}
           <div>
             <label className="block text-gray-700 text-sm font-medium mb-1">
@@ -139,7 +138,7 @@ const NewListing = () => {
             type="submit"
             className="w-full bg-[rgb(249,50,54)] text-white font-medium py-3 rounded-xl hover:bg-[rgb(230,40,45)] transition shadow-md mt-4"
           >
-            Create Listing
+            Update Listing
           </button>
         </form>
       </div>
@@ -147,4 +146,4 @@ const NewListing = () => {
   );
 };
 
-export default NewListing;
+export default EditForm;

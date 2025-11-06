@@ -11,8 +11,6 @@ const Home = () => {
       try {
         const data = await getAllListings();
          setListingData(data);
-        console.log(listingData);
-        
       } catch (err) {
         console.error("Error fetching listings:", err);
       } finally {

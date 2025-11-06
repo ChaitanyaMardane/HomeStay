@@ -1,8 +1,12 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
-const ListingCard = ({ listing }) => {
+const ListingCard = ({ listing }) => {  
+  const navigate= useNavigate();
   return (
-    <div className="max-w-sm bg-white shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-shadow duration-300">
+    <div className="max-w-sm bg-white shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-shadow duration-300"
+    onClick={()=>{navigate(`/listing/${listing.id}`)}}
+    >
       {/* Image */}
       <img
         src={listing.image}

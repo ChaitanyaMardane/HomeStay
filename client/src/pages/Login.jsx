@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser, registerUser } from "../services/authService";
+import { Home, LogIn } from "lucide-react";
 // import { loginUser } from "../services/authService";
 // import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
+    const [loading, setLoading] = useState(false);
   const [newUser, setNewUser] = useState(true);
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
@@ -35,61 +37,96 @@ const Login = () => {
     }
   };
 
-  return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white shadow-lg rounded-2xl p-8 w-96"
+  
+    return (
+    <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center px-4">
+      {/* Logo / Header */}
+      <div
+        className="flex items-center gap-2 mb-8 cursor-pointer"
+        onClick={() => navigate("/")}
       >
-        <h2 className="text-2xl font-semibold text-center mb-6">
-          {newUser ? "Register" : "Login"}
-        </h2>
+        <div className="bg-[rgb(249,50,54)] p-2 rounded-xl shadow-md">
+          <Home className="h-6 w-6 text-white" />
+        </div>
+        <span className="text-2xl font-semibold text-blue-600 tracking-tight">
+          HomeStay
+        </span>
+      </div>
 
-        {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
-        {newUser && (
-          <input
-            type="text"
-            placeholder="username"
-            className="border w-full p-2 rounded mb-4"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        )}
-        <input
-          type="email"
-          placeholder="Email"
-          className="border w-full p-2 rounded mb-4"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+      {/* Login Card */}
+      <div className="bg-white shadow-xl rounded-2xl w-full max-w-md p-8 border border-gray-100">
+        <h1 className="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+          <LogIn className="h-5 w-5 text-[rgb(249,50,54)]" /> {newUser?"Sign Up":"Login to Your Account"}
+        </h1>
 
-        <input
-          type="password"
-          placeholder="Password"
-          className="border w-full p-2 rounded mb-6"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+        <form onSubmit={handleSubmit} className="space-y-5">
 
-        <button
-          type="submit"
-          className="bg-blue-600 text-white w-full py-2 rounded hover:bg-blue-700 transition"
-        >
-          Sign In
-        </button>
+           { newUser&& <div>
+            <label className="block text-sm text-gray-600 font-medium mb-1">
+              Name
+            </label>
+            <input
+              type="text"
+              placeholder="Chaitanya Mardane"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[rgb(249,50,54)] outline-none transition"
+              required
+            />
+          </div>}
 
-        <p className="mt-4 text-center text-sm">
-          Don’t have an account?{" "}
+          <div>
+            <label className="block text-sm text-gray-600 font-medium mb-1">
+              Email
+            </label>
+            <input
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[rgb(249,50,54)] outline-none transition"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm text-gray-600 font-medium mb-1">
+              Password
+            </label>
+            <input
+              type="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[rgb(249,50,54)] outline-none transition"
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            // disabled={loading}
+            className={`w-full py-3 rounded-xl font-medium text-white bg-[rgb(249,50,54)] hover:bg-[rgb(230,40,45)] transition shadow-md ${
+              loading ? "opacity-70 cursor-not-allowed" : ""
+            }`}
+          >
+            {loading ? "Logging in..." : "Login"}
+          </button>
+        </form>
+
+        <p className="text-sm text-gray-500 text-center mt-6">
+         {!newUser ? " Don’t have an account?" : " Already have an account?"}{" "}
           <span
-            className="text-blue-600 hover:underline"
+            className="text-[rgb(249,50,54)] font-medium hover:underline cursor-pointer"
             onClick={() => setNewUser(!newUser)}
           >
-            Sign up
+            { !newUser ? "Sign up" : "Login"}
           </span>
         </p>
-      </form>
+      </div>
+
+      {/* Decorative background element */}
+      <div className="absolute inset-0 -z-10 bg-gradient-to-br from-[rgb(249,50,54,0.05)] via-white to-blue-50" />
     </div>
   );
 };
