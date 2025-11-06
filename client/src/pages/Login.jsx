@@ -23,6 +23,10 @@ const Login = () => {
         ? await registerUser({ username, email, password })
         : await loginUser({ email, password });
       const { user, token } = res;
+      localStorage.setItem("auth", JSON.stringify({ user, token }));
+    
+      console.log(localStorage.getItem("auth"));
+      
       console.log("register the user ", res);
       setNewUser(true);
       navigate("/");
