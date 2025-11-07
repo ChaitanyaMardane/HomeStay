@@ -12,12 +12,10 @@ const PORT = process.env.PORT || 5000;
 app.use(
   cors({
     origin: "http://localhost:5173", // frontend origin
-    credentials: true,               // allow cookies / credentials
- 
+    credentials: true, // allow cookies / credentials
   })
 );
 app.use(express.json());
-
 
 app.use("/api/auth", authRoutes);
 app.use("/api/listings", listingRoutes);
