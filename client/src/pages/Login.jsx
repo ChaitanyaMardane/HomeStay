@@ -2,20 +2,20 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser, registerUser } from "../services/authService";
 import { Home, LogIn } from "lucide-react";
+import { useAuth } from "../Context/AuthContext";
 // import { loginUser } from "../services/authService";
 // import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
-    const [loading, setLoading] = useState(false);
+    const [loading] = useState(false);
   const [newUser, setNewUser] = useState(true);
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   ("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  // const { setUser } = useAuth();
+  const { setUser } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,10 +26,12 @@ const Login = () => {
         : await loginUser({ email, password });
       const { user, token } = res;
       localStorage.setItem("auth", JSON.stringify({ user, token }));
-    
-      console.log(localStorage.getItem("auth"));
-      
-      console.log("register the user ", res);
+      setUser(user);
+      // const auth = localStorage.getItem("auth");
+
+      // console.log(JSON.parse(auth));
+
+      // console.log("register the user ", res);
       setNewUser(true);
       navigate("/");
     } catch (error) {
@@ -110,7 +112,7 @@ const Login = () => {
               loading ? "opacity-70 cursor-not-allowed" : ""
             }`}
           >
-            {loading ? "Logging in..." : "Login"}
+            {loading ? "Logging in..." :  newUser ? "Sign up" : "Login"}
           </button>
         </form>
 

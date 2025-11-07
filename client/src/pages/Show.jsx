@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ArrowLeft, Edit, Trash2, MapPin } from "lucide-react";
+import { deleteListing } from "../services/listingService";
 
 const Show = () => {
   const { id } = useParams();
@@ -25,21 +26,19 @@ const Show = () => {
   }, [id]);
 
 //   // Delete listing
-//   const handleDelete = async () => {
-//     const confirmDelete = window.confirm("Are you sure you want to delete this listing?");
-//     if (!confirmDelete) return;
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this listing?");
+    if (!confirmDelete) return;
 
-//     try {
-//       await axios.delete(`http://localhost:5000/api/listings/${id}`, {
-//         withCredentials: true,
-//       });
-//       alert("Listing deleted successfully!");
-//       navigate("/");
-//     } catch (err) {
-//       console.error("Error deleting listing:", err);
-//       alert("Failed to delete listing.");
-//     }
-//   };
+    try {
+       await deleteListing(listing.id);
+      alert("Listing deleted successfully!");
+      navigate("/");
+    } catch (err) {
+      console.error("Error deleting listing:", err);
+      alert("Failed to delete listing.");
+    }
+  };
 
   if (loading) return <p className="text-center mt-10">Loading listing...</p>;
   if (!listing) return <p className="text-center mt-10">Listing not found.</p>;
@@ -106,7 +105,7 @@ const Show = () => {
         </button>
 
         <button
-          // onClick={handleDelete}
+          onClick={handleDelete}
           className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg shadow-sm text-sm transition"
         >
           <Trash2 className="h-4 w-4" /> Delete

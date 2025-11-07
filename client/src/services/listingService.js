@@ -10,7 +10,6 @@ const getAllListings = async () => {
   }
 };
 
-
 const createListing = async (data) => {
   try {
     const response = await API.post("/api/listings", data);
@@ -19,7 +18,7 @@ const createListing = async (data) => {
     console.error("Error creating listing:", error);
     throw error;
   }
-}
+};
 const getListingById = async (id) => {
   try {
     const response = await API.get(`/api/listings/${id}`);
@@ -40,4 +39,16 @@ const updateListing = async (id, data) => {
   }
 };
 
-export { getAllListings, createListing, getListingById, updateListing };
+const deleteListing = async (id) => {
+  try {
+    const response =  await API.delete(`http://localhost:5000/api/listings/${id}`, {
+    withCredentials: true,
+  });
+  return response.data;
+  } catch (error) {
+    console.error("Error deleting listing:", error);
+    throw error;
+  }
+  
+};
+export { getAllListings, createListing, getListingById, updateListing, deleteListing };

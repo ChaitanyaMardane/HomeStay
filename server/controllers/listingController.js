@@ -80,4 +80,22 @@ export const updateListing = async (req, res) => {
   }
 };
 
-export const deleteListing = async (req, res) => {};
+export const deleteListing = async (req, res) => {
+  const {id} = req.params;
+  console.log("enter the server to delete" + id);
+  
+  try {
+    const DeletedListing = await prisma.Listing.delete({
+      where: { id: Number(id) }, // ensure it's a number if id is Int
+    });
+  res.status(200).json(DeletedListing);
+  } catch (error) {
+    console.log(error);
+      res.status(500).json({
+        status:false,
+        message: "failed to delete the error"
+      })
+    
+  }
+ 
+};

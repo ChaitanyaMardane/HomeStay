@@ -1,11 +1,30 @@
 import { Home, Search } from 'lucide-react'
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import AuthContext from '../Context/AuthContext';
+
 
  const Header=()=> {
   const navigate = useNavigate();
-  const handleLogin=()=>{
-      navigate("/login")
+  const {user,  logout}= useContext(AuthContext);
+  console.log(user);
+  useEffect(()=>{},[user])
+  
+
+
+  const handleLogin=(e)=>{
+
+    
+        if(e.target.innerText=="LogOut"){
+          logout();
+        console.log("User logged out");
+        navigate('/')
+        }
+        else{
+          navigate('/login');
+        }
+        
+    
   }
 
   
@@ -42,7 +61,8 @@ import { useNavigate } from 'react-router-dom'
       {/* Host Button */}
       <div>
         <h1 className="bg-gray-100 hover:bg-gray-200 px-5 py-2 rounded-full text-sm font-medium text-gray-700 cursor-pointer transition"
-          onClick={()=>{navigate("/new_listing")}}
+          onClick={()=>{
+            (user)?navigate("/new_listing"):navigate("/login")}}
         >
           Become a host
         </h1>
@@ -54,11 +74,9 @@ import { useNavigate } from 'react-router-dom'
           className="bg-[rgb(249,50,54)] hover:bg-[rgb(230,40,45)] text-white px-5 py-2 rounded-full font-medium text-sm shadow-sm transition"
           onClick={handleLogin}
         >
-          Login
+         { user?"LogOut": "Login"}
         </button>
-        <button className="bg-[rgb(249,50,54)] hover:bg-[rgb(230,40,45)] text-white px-5 py-2 rounded-full font-medium text-sm shadow-sm transition mx-10">
-          Sign Up
-        </button>
+       
       </div>
     </div>
 

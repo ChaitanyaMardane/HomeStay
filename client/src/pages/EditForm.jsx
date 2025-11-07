@@ -21,7 +21,7 @@ const EditForm = () => {
      await updateListing(id, formData);
     console.log("updated listing : ");
     alert("Listing is updated successfully")
-    navigate("/");
+    navigate("/listing/"+id);
   }
   const handleChange = (e) => {
     const { name, value } = e.target;

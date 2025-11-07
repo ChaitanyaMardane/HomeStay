@@ -25,12 +25,11 @@ const Home = () => {
   }, [listingData]);
     if (loading) return <p className="text-center mt-20">Loading listings...</p>;
   return (
-    <div>
-      <h1 className='font-bold text-3xl m-4 ml-18.25 '>Listings</h1>
+    <div className=''>
+      <h1 className='font-bold text-3xl m-4 ml-18.25 mt-20 '>Listings</h1>
       <div className='flex flex-wrap justify-evenly gap-4'>
-        {listingData.map(listing=> <ListingCard listing={listing}></ListingCard>)}
-      
-    </div>
+        {listingData.map(listing=> <ListingCard key={listing.id} listing={listing}></ListingCard>)}
+      </div>
 
     </div>
     
