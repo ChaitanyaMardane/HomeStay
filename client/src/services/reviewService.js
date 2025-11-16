@@ -1,33 +1,36 @@
 
 import API from "../utils/axios";
 
-const getAllListings = async () => {
-  try {
-    const response = await API.get("/api/listings");
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching listings:", error);
-    throw error;
-  }
-};
+// const getAllReviews = async (id) => {
+//   try {
+//     const response = await API.get(`/api/listings/${id}/reviews`);
+//     return response.data;
+//   } catch (error) {
+//     console.error("Error fetching listings:", error);
+//     throw error;
+//   }
+// };
 
-const createListing = async (data) => {
-  console.log("create ;isting data ", data);
+const createReview = async (data) => {
+    // console.log(`/api/${data.listingId}/reviews`);
+
   
   try {
-    const response = await API.post("/api/listings", data);
+    const response = await API.post(`/api/${data.listingId}/reviews`, data);
+  // console.log("create reveiew data ", response.data);
+    
     return response.data;
   } catch (error) {
     console.error("Error creating listing:", error);
     throw error;
   }
 };
-const getListingById = async (id) => {
-  console.log(id);
+const getAllReviews = async (id) => {
+  console.log("this is losting ",id);
   
   try {
-    const response = await API.get(`/api/listings/${id}`);
-    console.log("response from service:", response);
+    const response = await API.get(`/api/${id}/reviews`);
+    console.log("response from service: for reviws ", response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching listing:", error);
@@ -60,9 +63,8 @@ const deleteListing = async (id) => {
   }
 };
 export {
-  getAllListings,
-  createListing,
-  getListingById,
+  createReview,
+  getAllReviews,
   updateListing,
   deleteListing,
 };

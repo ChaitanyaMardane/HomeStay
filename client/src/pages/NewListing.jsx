@@ -1,18 +1,19 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { PlusCircle } from "lucide-react";
 import { createListing } from "../services/listingService";
+import { useAuth } from "../Context/AuthContextCreation";
 
 const NewListing = () => {
-    
   const navigate = useNavigate();
+  const {user}= useAuth();
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     location: "",
     price: "",
     image: "",
+    userId: user?.id,
   });
 
   const handleChange = (e) => {
@@ -22,11 +23,11 @@ const NewListing = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-     createListing(formData);
-      navigate("/"); 
+      createListing(formData);
+      navigate("/");
       alert("Listing created successfully!");
     } catch (err) {
-      alert("Failed to create listing."+ err);
+      alert("Failed to create listing." + err);
     }
   };
 

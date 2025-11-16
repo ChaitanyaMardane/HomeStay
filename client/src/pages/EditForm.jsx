@@ -6,7 +6,7 @@ import { getListingById, updateListing } from "../services/listingService";
 const EditForm = () => {
   const { id } = useParams();
   const [formData, setFormData] = useState({});
-  const navigate= useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -18,11 +18,10 @@ const EditForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-     await updateListing(id, formData);
-    console.log("updated listing : ");
-    alert("Listing is updated successfully")
-    navigate("/listing/"+id);
-  }
+    await updateListing(id, formData);
+    alert("Listing is updated successfully");
+    navigate("/listing/" + id);
+  };
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));

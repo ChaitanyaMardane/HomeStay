@@ -13,23 +13,56 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum Category {
+  APARTMENT
+  VILLA
+  STUDIO
+  HOSTEL
+  HOUSE
+  PG
+  CITY
+}
+
+
 model User{
-  id Int @id @default(autoincrement())
+  id       String @id @default(uuid())
   username String
   password String
   listings Listing[]
+  reviews  Review[]
   email String @unique
-
 }
 
 model Listing {
-  id          Int      @id @default(autoincrement())
+  id          String @id @default(uuid())
   title       String
   description String
   price       Float
   location    String
   image       String?
-  userId      Int
-  user        User     @relation(fields: [userId], references: [id])
+  // category    Category   @default(CITY)
+  userId      String
+  reviews     Review[]
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now())
 }
+
+model Review {
+  id         String @id @default(uuid())
+  rating     Int
+  comment    String
+  createdAt  DateTime @default(now())
+  userId     String
+  listingId  String
+  user       User     @relation(fields: [userId], references: [id] , onDelete: Cascade)
+  listing    Listing  @relation(fields: [listingId], references: [id] , onDelete: Cascade)
+}
+
+// INSERT INTO "Review" (rating, comment, "userId", "listingId")
+// VALUES (
+//   5,
+//   'Amazing property and great location!',
+//   'user-uuid-here',
+//   'listing-uuid-here'
+// );

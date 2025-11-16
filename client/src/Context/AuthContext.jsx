@@ -1,33 +1,20 @@
-import { createContext,  useState, useEffect, useContext } from "react";
-// import { verifyUser } from "../services/authService";
-
- const AuthContext = createContext();
-
- export const useAuth = () => useContext(AuthContext);
-
+import { AuthContext } from "./AuthContextCreation.js";
+import { useState, useEffect } from "react";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
-  // const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("auth");
     if (storedUser) {
       const parsed = JSON.parse(storedUser);
-      console.log("parsed ", parsed);
-      console.log("user :{" ,parsed.user,"}");
-      
-      // console.log(parsed.user );
-      
 
-      setUser(parsed.user || null );
-      console.log(user); 
+      setUser(parsed.user || null);
       setToken(parsed.token || null);
-      console.log(token);
-
     }
-    // setLoading(false)
+    setLoading(false)
   }, [token]);
 
   const login = (UserData, TokenData) => {
@@ -44,11 +31,11 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("auth");
   };
   return (
-    <AuthContext.Provider value={{ login, logout, user, token , setUser , setToken }}>
+    <AuthContext.Provider
+      value={{ login, logout, user, token, setUser, setToken, loading }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
 export default AuthContext;
-
-

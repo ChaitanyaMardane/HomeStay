@@ -1,37 +1,85 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { ArrowLeft, Edit, Trash2, MapPin } from "lucide-react";
-import { deleteListing } from "../services/listingService";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { ArrowLeft, Edit, Trash2, MapPin, Star } from "lucide-react";
+import { deleteListing, getListingById } from "../services/listingService";
+import { useAuth } from "../Context/AuthContextCreation";
+import ReviewCard from "../Components/ReviewCard";
+import { createReview, getAllReviews } from "../services/reviewService";
 
 const Show = () => {
   const { id } = useParams();
+  const { state } = useLocation();
   const navigate = useNavigate();
-  const [listing, setListing] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [listing, setListing] = useState(state?.listing || null);
+  const [loading, setLoading] = useState(listing?false:true);
+  const { user } = useAuth();
+  const [reviews, setReviews] = useState(state?.listing.reviews || []);
+  const [newReview, setNewReview] = useState({
+    rating: 0,
+    comment: "",
+    userId: user.id,
+    listingId: id,
+  });
 
-  // Fetch listing by ID
   useEffect(() => {
-    const fetchListing = async () => {
-      try {
-        const res = await axios.get(`http://localhost:5000/api/listings/${id}`);
-        setListing(res.data);
-      } catch (err) {
-        console.error("Error fetching listing:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchListing();
+    setListing(state?.listing);
+    if (!listing) {
+      fetchListing();
+    } else {
+      setLoading(false);
+    }
   }, [id]);
+  useEffect(()=>{},[reviews]);
 
-//   // Delete listing
-  const handleDelete = async () => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this listing?");
-    if (!confirmDelete) return;
-
+  const fetchListing = async () => {
     try {
-       await deleteListing(listing.id);
+      const res = await getListingById(id);
+      setListing(res);
+    } catch (err) {
+      console.error("Error fetching listing:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchReviews = async (id) => {
+    try {
+      const res = await getAllReviews(id);
+      return res;
+    } catch (err) {
+      console.error("Error fetching listing:", err);
+    }
+  };
+
+  const handleReviewSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await createReview(newReview);
+      const allReviews = await fetchReviews(id);
+      console.log("All the reviews : ",allReviews);
+      setReviews(allReviews);
+      console.log("Reviews var " ,reviews);
+      
+      
+      // Optionally update reviews state here if needed
+      navigate(`/listing/${id}`)
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setNewReview({ ...newReview, [name]: value });
+  };
+
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this listing?"
+    );
+    if (!confirmDelete) return;
+    try {
+      await deleteListing(listing.id);
       alert("Listing deleted successfully!");
       navigate("/");
     } catch (err) {
@@ -42,78 +90,116 @@ const Show = () => {
 
   if (loading) return <p className="text-center mt-10">Loading listing...</p>;
   if (!listing) return <p className="text-center mt-10">Listing not found.</p>;
-// const listing={
-//     id: 64,
-//     title: 'New Listing 1',
-//     description: 'this is the genuine lesting after removing the price error',
-//     price: 54544,
-//     location: 'Malibu',
-//     image: 'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fGhvdGVsc3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60',
-//     // createdAt: 2025-11-06T18:40:52.602Z
-//   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-10 px-4 flex flex-col items-center ">
-  <div className="max-w-2xl w-full bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100 mt-20">
-    {/* Image */}
-    <img
-      src={listing.image}
-      alt={listing.title}
-      className="w-full h-64 object-cover rounded-t-2xl"
-    />
+    <div className="min-h-screen bg-gray-50 py-10 px-4 flex flex-col items-center">
+      <div className="max-w-3xl w-full bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 mt-20">
+        <div className="relative">
+          <img
+            src={listing.image}
+            alt={listing.title}
+            className="w-full h-72 object-cover rounded-t-2xl"
+          />
+          <button
+            onClick={() => navigate(-1)}
+            className="absolute top-4 left-4 bg-white/80 backdrop-blur-sm px-3 py-2 rounded-full text-gray-600 hover:text-gray-900 shadow-md transition"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </button>
+        </div>
 
-    {/* Info */}
-    <div className="p-6 sm:p-8">
-      {/* Back button */}
-      <button
-        onClick={() => navigate(-1)}
-        className="flex items-center text-gray-500 hover:text-gray-700 mb-4 text-sm font-medium transition"
-      >
-        <ArrowLeft className="h-4 w-4 mr-1" /> Back
-      </button>
+        <div className="p-8">
+          <div className="flex justify-between items-start">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-800 mb-2">
+                {listing.title}
+              </h1>
+              <p className="text-gray-500 text-sm flex items-center gap-1">
+                <MapPin className="h-4 w-4 text-gray-400" /> {listing.location}
+              </p>
+            </div>
 
-      {/* Title + Location */}
-      <h1 className="text-2xl sm:text-3xl font-semibold text-gray-800 mb-1 leading-snug">
-        {listing.title}
-      </h1>
-      <p className="text-gray-500 text-sm mb-5 flex items-center gap-1">
-        <MapPin className="h-4 w-4 text-gray-400" /> {listing.location}
-      </p>
+            {listing.userId === user?.id && (
+              <div className="flex gap-2">
+                <button
+                  onClick={() => navigate(`/listing/edit/${listing.id}`)}
+                  className="flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg text-sm transition"
+                >
+                  <Edit className="h-4 w-4" /> Edit
+                </button>
+                <button
+                  onClick={handleDelete}
+                  className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg text-sm transition"
+                >
+                  <Trash2 className="h-4 w-4" /> Delete
+                </button>
+              </div>
+            )}
+          </div>
 
-      {/* Description */}
-      <p className="text-gray-700 text-sm sm:text-base leading-relaxed mb-6">
-        {listing.description}
-      </p>
+          <p className="text-gray-700 leading-relaxed mt-5 mb-8">
+            {listing.description}
+          </p>
 
-      {/* Price + Date */}
-      <div className="flex items-center justify-between mb-6 border-t border-gray-100 pt-4">
-        <span className="text-xl sm:text-2xl font-semibold text-[rgb(249,50,54)]">
-          ₹{listing.price}
-        </span>
-        <span className="text-xs text-gray-400">
-          Posted on {new Date(listing.createdAt).toLocaleDateString()}
-        </span>
-      </div>
+          <div className="flex justify-between items-center border-t border-gray-100 pt-4">
+            <span className="text-2xl font-semibold text-[rgb(249,50,54)]">
+              ₹{listing.price}
+            </span>
+            <span className="text-xs text-gray-400">
+              Posted on {new Date(listing.createdAt).toLocaleDateString()}
+            </span>
+          </div>
 
-      {/* Buttons */}
-      <div className="flex gap-3 justify-end">
-        <button
-          onClick={() => navigate(`/listing/edit/${listing.id}`)}
-          className="flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg shadow-sm text-sm transition"
-        >
-          <Edit className="h-4 w-4" /> Edit
-        </button>
+          <div className="mt-10 border-t pt-6">
+            <h2 className="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
+              <Star className="h-5 w-5 text-yellow-500" /> Reviews
+            </h2>
+            <div className="space-y-4">
+              {reviews.map((r) => (
+                <ReviewCard r={r} key={r.id} />
+              ))}
+            </div>
+            {user && (
+              <form
+                onSubmit={handleReviewSubmit}
+                className="mt-6 flex flex-col gap-3 border-t pt-4"
+              >
+                <select
+                  name="rating"
+                  value={newReview.rating}
+                  onChange={handleChange}
+                  className="p-2 border rounded-lg text-sm"
+                  required
+                >
+                  <option value="">Select rating</option>
+                  {[1, 2, 3, 4, 5].map((r) => (
+                    <option key={r} value={r}>
+                      {r} Star{r > 1 && "s"}
+                    </option>
+                  ))}
+                </select>
 
-        <button
-          onClick={handleDelete}
-          className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg shadow-sm text-sm transition"
-        >
-          <Trash2 className="h-4 w-4" /> Delete
-        </button>
+                <textarea
+                  name="comment"
+                  placeholder="Write your review..."
+                  value={newReview.comment}
+                  onChange={handleChange}
+                  className="p-3 border rounded-lg text-sm focus:ring-1 focus:ring-[rgb(249,50,54)]"
+                  required
+                />
+
+                <button
+                  type="submit"
+                  className="self-end bg-[rgb(249,50,54)] text-white px-4 py-2 rounded-lg hover:bg-[rgb(230,40,45)] text-sm transition"
+                >
+                  Post Review
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
   );
 };
 

@@ -74,15 +74,22 @@ export const protectRoute = async (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   const token = authHeader && authHeader.split(" ")[1];
+  console.log(token);
+  
 
   if (!token) {
     return res.status(401).json({ message: "No token, authorization denied" });
   }
-  let Newuser = jwt.verify(token, process.env.JWT_SECRET, async (err, user) => {
-    if (err) {
-      return res.redirect("http://localhost:5173/");
-    }
-  });
-  req.user = await prisma.user.findUnique({ where: { id: Newuser.id } });
+  try {
+      let Newuser = jwt.verify(token, process.env.JWT_SECRET );
+  console.log("Decoded user :",Newuser);
+   req.user = Newuser
   next();
+  } catch (error) {
+    console.error("JWT Verify Error:", err.message);
+    return res.status(403).json({ message: "Token is invalid or expired" });
+  }
+
+  
+ 
 };

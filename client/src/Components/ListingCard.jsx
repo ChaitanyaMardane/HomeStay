@@ -1,11 +1,14 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const ListingCard = ({ listing }) => {  
-  const navigate= useNavigate();
+const ListingCard = ({ listing }) => {
+  const navigate = useNavigate();
   return (
-    <div className="max-w-sm min-w-sm bg-white shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-shadow duration-300"
-    onClick={()=>{navigate(`/listing/${listing.id}`)}}
+    <div
+      className="max-w-sm min-w-sm bg-white shadow-lg rounded-2xl overflow-hidden hover:shadow-xl transition-shadow duration-300"
+      onClick={() => {
+        navigate(`/listing/${listing.id}`, {state: {listing}});
+      }}
     >
       {/* Image */}
       <img

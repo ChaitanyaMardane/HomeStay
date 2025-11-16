@@ -12,13 +12,13 @@ const router = createBrowserRouter([
     {
         path: "/",
         element : <App></App>,
-        children:[
-          {index : true, element: <Home></Home> },
-          {path: "/login", element : <Login></Login>},
-           {path: "/new_listing", element :<ProtectedRoutes> <NewListing /></ProtectedRoutes>},
-           {path: "/listing/:id", element : <ProtectedRoutes> <Show /></ProtectedRoutes>},
-           {path: "/listing/edit/:id",element: <ProtectedRoutes> <EditForm /></ProtectedRoutes>}
-
+        children:
+        [
+            {index : true, element: <Home></Home> },
+            {path: "/login", element : <Login></Login>},
+            {path: "/new_listing", element :<ProtectedRoutes> <NewListing /></ProtectedRoutes>},
+            {path: "/listing/:id", element : <ProtectedRoutes> <Show /></ProtectedRoutes>},
+            {path: "/listing/edit/:id",element: <ProtectedRoutes> <EditForm /></ProtectedRoutes>}
         ]
     }
 ])
