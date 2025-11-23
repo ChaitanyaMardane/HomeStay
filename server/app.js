@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 const PORT = process.env.PORT || 5000;
 app.use(
   cors({
-    origin: "http://localhost:5173", // frontend origin
+    origin: "https://homestay-frontend-5xcp.onrender.com/", // frontend origin
     credentials: true, // allow cookies / credentials
   })
 );
