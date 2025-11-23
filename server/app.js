@@ -12,8 +12,8 @@ app.use(express.urlencoded({ extended: true }));
 
 const PORT = process.env.PORT || 5000;
 app.use(
-  cors({
-    origin: "https://homestay-frontend-5xcp.onrender.com", // frontend origin
+cors({
+    origin: proces.env.FRONTEND_URL, // frontend origin
     credentials: true, // allow cookies / credentials
   })
 );

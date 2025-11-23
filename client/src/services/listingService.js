@@ -1,5 +1,5 @@
 
-import API from "../utils/axios";
+import API from "../utils/axios.js";
 
 const getAllListings = async () => {
   try {
@@ -48,7 +48,7 @@ const updateListing = async (id, data) => {
 const deleteListing = async (id) => {
   try {
     const response = await API.delete(
-      `http://localhost:5000/api/listings/${id}`,
+      `/api/listings/${id}`,
       {
         withCredentials: true,
       }
