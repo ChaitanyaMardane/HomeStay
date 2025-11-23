@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 const PORT = process.env.PORT || 5000;
 app.use(
 cors({
-    origin: proces.env.FRONTEND_URL, // frontend origin
+    origin: process.env.FRONTEND_URL, // frontend origin
     credentials: true, // allow cookies / credentials
   })
 );
