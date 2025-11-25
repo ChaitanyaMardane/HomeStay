@@ -19,18 +19,21 @@ const Home = () => {
   };
   useEffect(() => {
     fetchListings();
-  }, []);
+  }, [listingData]);
   useEffect(() => {}, [listingData]);
   if (loading) return <p className="text-center mt-20">Loading listings...</p>;
   return (
-    <div className="">
-      <h1 className="font-bold text-3xl m-4 ml-18.25 mt-20 ">Listings</h1>
-      <div className="flex flex-wrap justify-evenly gap-4">
-        {listingData.map((listing) => (
-          <ListingCard key={listing.id} listing={listing}></ListingCard>
-        ))}
-      </div>
-    </div>
+   <div className="container mx-auto px-6">
+  <h1 className="font-bold text-3xl mt-20 mb-6 text-gray-800">
+    Listings
+  </h1>
+
+  <div className="flex flex-wrap justify-center sm:justify-start gap-6">
+    {listingData.map((listing) => (
+      <ListingCard key={listing.id} listing={listing} />
+    ))}
+  </div>
+</div>
   );
 };
 
