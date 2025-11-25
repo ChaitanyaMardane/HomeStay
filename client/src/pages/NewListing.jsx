@@ -12,7 +12,7 @@ const NewListing = () => {
     description: "",
     location: "",
     price: "",
-    image: null,
+    image: "",
     userId: user?.id,
   });
 
