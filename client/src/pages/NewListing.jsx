@@ -35,7 +35,7 @@ const NewListing = () => {
         })
         const uploadImageUrl = await res.json();
        console.log(uploadImageUrl);
-        setFormData({ ...formData, [event.target.name]: uploadImageUrl });
+        setFormData({ ...formData, [event.target.name]: uploadImageUrl.url });
         console.log(formData.image);
         
        
@@ -154,7 +154,7 @@ const NewListing = () => {
           {formData.image && (
             <div className="mt-4">
               <img
-                src={formData.image.secure_url}
+                src={formData.image}
                 alt="Preview"
                 className="rounded-xl shadow-sm w-full h-56 object-cover border"
               />
