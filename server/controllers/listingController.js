@@ -2,6 +2,8 @@ import prisma from "../prisma/client.js";
 
 export const createListing = async (req, res) => {
   const { title, description, location, price, image, userId } = req.body;
+  console.log(req.body);
+  
   const priceNumber = Number(price);
 
   if (
@@ -45,7 +47,7 @@ export const getAllListings = async (req, res) => {
   },
   orderBy: { createdAt: "desc" },
 });
-    console.log(listings);
+
     
     
     res.status(200).json(listings);
@@ -61,7 +63,6 @@ export const getListing = async (req, res) => {
   // console.log(req);
 
   const { id } = req.params;
-  console.log("listing id :", id);
 
   try {
     const listing = await prisma.Listing.findUnique({
@@ -70,12 +71,11 @@ export const getListing = async (req, res) => {
       },
       where: { id },
     });
-    console.log("fetchedd listing:  ", listing);
     
     if (!listing) {
       return res.status(404).json({ message: "Listing not found" });
     }
-    console.log("Listng with reviews "+ listing);
+    // console.log("Listng with reviews "+ listing);
 
 
     res.status(200).json(listing);

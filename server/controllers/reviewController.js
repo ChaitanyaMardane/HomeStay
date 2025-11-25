@@ -29,7 +29,7 @@ console.log("Review Created Successfully : ",newReview);
 export const getAllReviews = async (req, res) => {
   console.log("you reached the  get all review");
   const {lid} = req.params;
-  console.log(lid );
+  // console.log(lid );
   
   
   try{
@@ -43,7 +43,7 @@ export const getAllReviews = async (req, res) => {
       }
     }
   })
-  console.log("This is the reviewws : ", reviews);
+  // console.log("This is the reviewws : ", reviews);
   res.json(reviews);
 
   }catch (error) {

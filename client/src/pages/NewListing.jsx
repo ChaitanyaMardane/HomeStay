@@ -33,9 +33,9 @@ const NewListing = () => {
             method : "POST",
             body : data
         })
-        const uploadImageUrl = await res.json();
-       console.log(uploadImageUrl);
-        setFormData({ ...formData, [event.target.name]: uploadImageUrl.url });
+        const {url} = await res.json();
+       console.log(url);
+        setFormData({ ...formData, [event.target.name]: url });
         console.log(formData.image);
         
        
@@ -49,6 +49,8 @@ const NewListing = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      console.log(formData);
+      
       createListing(formData);
       navigate("/");
       alert("Listing created successfully!");

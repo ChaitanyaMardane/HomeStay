@@ -74,7 +74,6 @@ export const protectRoute = async (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   const token = authHeader && authHeader.split(" ")[1];
-  console.log(token);
   
 
   if (!token) {
@@ -82,7 +81,7 @@ export const protectRoute = async (req, res, next) => {
   }
   try {
       let Newuser = jwt.verify(token, process.env.JWT_SECRET );
-  console.log("Decoded user :",Newuser);
+  // console.log("Decoded user :",Newuser);
    req.user = Newuser
   next();
   } catch (error) {
