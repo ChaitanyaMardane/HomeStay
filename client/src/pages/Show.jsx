@@ -89,132 +89,132 @@ const Show = () => {
   if (!listing) return <p className="text-center mt-10">Listing not found.</p>;
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 flex justify-center">
-      <div className="max-w-3xl w-full bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden mt-16">
-        {/* Image */}
-        <div className="relative">
-          <img
-            src={listing.image}
-            alt={listing.title}
-            className="w-full h-72 object-cover"
-          />
+    <div className="min-h-screen bg-gray-50 pb-16 flex justify-center px-4">
+  <div className="w-full max-w-4xl">
+
+    {/* Hero Section */}
+    <div className="relative mt-20 rounded-3xl overflow-hidden shadow-md">
+      <img
+        src={listing.image}
+        alt={listing.title}
+        className="w-full h-[400px] object-cover"
+      />
+
+      {/* Back Button */}
+      <button
+        onClick={() => navigate(-1)}
+        className="absolute top-5 left-5 bg-white/90 backdrop-blur-md px-3 py-2 rounded-full shadow hover:shadow-md transition"
+      >
+        <ArrowLeft className="h-5 w-5 text-gray-600" />
+      </button>
+    </div>
+
+    {/* Floating Content Card */}
+    <div className="relative -mt-12 bg-white rounded-3xl shadow-lg p-8 border border-gray-100">
+      
+      {/* Title + Location */}
+      <div className="flex flex-col gap-1">
+        <h1 className="text-4xl font-bold text-gray-900 leading-tight">
+          {listing.title}
+        </h1>
+
+        <p className="text-gray-500 text-sm flex items-center gap-1">
+          <MapPin className="h-4 w-4 text-gray-400" /> {listing.location}
+        </p>
+      </div>
+
+      {/* Owner Actions */}
+      {listing.userId === user?.id && (
+        <div className="flex gap-3 mt-4">
+          <button
+            onClick={() => navigate(`/listing/edit/${listing.id}`)}
+            className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm transition shadow-sm"
+          >
+            <Edit className="h-4 w-4" /> Edit Listing
+          </button>
 
           <button
-            onClick={() => navigate(-1)}
-            className="absolute top-4 left-4 bg-white/80 px-3 py-2 rounded-full backdrop-blur-md shadow hover:bg-white transition"
+            onClick={handleDelete}
+            className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm transition shadow-sm"
           >
-            <ArrowLeft className="h-5 w-5 text-gray-600" />
+            <Trash2 className="h-4 w-4" /> Delete
           </button>
         </div>
+      )}
 
-        {/* Content */}
-        <div className="p-8">
-          {/* Title + Actions */}
-          <div className="flex justify-between flex-wrap gap-4">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-800">
-                {listing.title}
-              </h1>
+      {/* Description */}
+      <p className="text-gray-700 text-base leading-relaxed mt-6 mb-8">
+        {listing.description}
+      </p>
 
-              <p className="text-gray-500 text-sm mt-1 flex items-center gap-1">
-                <MapPin className="h-4 w-4 text-gray-400" />
-                {listing.location}
-              </p>
-            </div>
+      {/* Price + Posted */}
+      <div className="flex justify-between items-center bg-gray-100 p-4 rounded-xl">
+        <span className="text-3xl font-bold text-[rgb(249,50,54)]">
+          ₹{listing.price}
+        </span>
 
-            {listing.userId === user?.id && (
-              <div className="flex gap-2">
-                <button
-                  onClick={() => navigate(`/listing/edit/${listing.id}`)}
-                  className="flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-md text-sm shadow-sm transition"
-                >
-                  <Edit className="h-4 w-4" /> Edit
-                </button>
+        <span className="text-xs text-gray-500">
+          Posted on {new Date(listing.createdAt).toLocaleDateString()}
+        </span>
+      </div>
 
-                <button
-                  onClick={handleDelete}
-                  className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-md text-sm shadow-sm transition"
-                >
-                  <Trash2 className="h-4 w-4" /> Delete
-                </button>
-              </div>
-            )}
+      {/* Reviews Section */}
+      <div className="mt-12">
+        <h2 className="text-2xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+          <Star className="h-6 w-6 text-yellow-500" /> Guest Reviews
+        </h2>
+
+        {reviews.length === 0 ? (
+          <p className="text-gray-500 text-sm italic">No reviews yet.</p>
+        ) : (
+          <div className="space-y-5">
+            {reviews.map((r) => (
+              <ReviewCard r={r} key={r.id} />
+            ))}
           </div>
+        )}
 
-          {/* Description */}
-          <p className="text-gray-700 text-base leading-relaxed mt-6 mb-6">
-            {listing.description}
-          </p>
+        {/* Add Review Box */}
+        {user && (
+          <form
+            onSubmit={handleReviewSubmit}
+            className="mt-8 border-t pt-6 flex flex-col gap-4"
+          >
+            <select
+              name="rating"
+              value={newReview.rating}
+              onChange={handleChange}
+              className="p-3 border rounded-lg text-sm focus:ring-[rgb(249,50,54)] bg-gray-50"
+              required
+            >
+              <option value="">Your rating</option>
+              {[1,2,3,4,5].map(r => (
+                <option key={r} value={r}>{r} Star{r>1 && "s"}</option>
+              ))}
+            </select>
 
-          {/* Price + Date */}
-          <div className="flex justify-between items-center border-t pt-4">
-            <span className="text-2xl font-semibold text-[rgb(249,50,54)]">
-              ₹{listing.price}
-            </span>
-            <span className="text-xs text-gray-400">
-              Posted on {new Date(listing.createdAt).toLocaleDateString()}
-            </span>
-          </div>
+            <textarea
+              name="comment"
+              placeholder="Share your experience..."
+              value={newReview.comment}
+              onChange={handleChange}
+              className="p-4 border rounded-lg text-sm min-h-[90px] focus:ring-[rgb(249,50,54)] bg-gray-50"
+              required
+            />
 
-          {/* Reviews Section */}
-          <div className="mt-10 border-t pt-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <Star className="h-5 w-5 text-yellow-500" />
-              Reviews
-            </h2>
-
-            {reviews.length === 0 ? (
-              <p className="text-gray-500 text-sm">No reviews yet.</p>
-            ) : (
-              <div className="space-y-4">
-                {reviews.map((r) => (
-                  <ReviewCard r={r} key={r.id} />
-                ))}
-              </div>
-            )}
-
-            {/* Add Review */}
-            {user && (
-              <form
-                onSubmit={handleReviewSubmit}
-                className="mt-6 flex flex-col gap-3 border-t pt-4"
-              >
-                <select
-                  name="rating"
-                  value={newReview.rating}
-                  onChange={handleChange}
-                  className="p-2 border rounded-lg text-sm focus:ring-[rgb(249,50,54)]"
-                  required
-                >
-                  <option value="">Select rating</option>
-                  {[1, 2, 3, 4, 5].map((r) => (
-                    <option key={r} value={r}>
-                      {r} Star{r > 1 && "s"}
-                    </option>
-                  ))}
-                </select>
-
-                <textarea
-                  name="comment"
-                  placeholder="Write your review..."
-                  value={newReview.comment}
-                  onChange={handleChange}
-                  className="p-3 border rounded-lg text-sm focus:ring-[rgb(249,50,54)] min-h-[80px]"
-                  required
-                />
-
-                <button
-                  type="submit"
-                  className="self-end bg-[rgb(249,50,54)] text-white px-4 py-2 rounded-lg hover:bg-[rgb(230,40,45)] text-sm transition"
-                >
-                  Post Review
-                </button>
-              </form>
-            )}
-          </div>
-        </div>
+            <button
+              type="submit"
+              className="self-end bg-[rgb(249,50,54)] hover:bg-[rgb(230,40,45)] text-white px-5 py-2 rounded-lg text-sm transition shadow"
+            >
+              Post Review
+            </button>
+          </form>
+        )}
       </div>
     </div>
+  </div>
+</div>
+
   );
 };
 
