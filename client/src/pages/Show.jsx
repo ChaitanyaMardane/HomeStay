@@ -11,7 +11,7 @@ const Show = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const [listing, setListing] = useState(state?.listing || null);
-  const [loading, setLoading] = useState(listing?false:true);
+  const [loading, setLoading] = useState(listing ? false : true);
   const { user } = useAuth();
   const [reviews, setReviews] = useState(state?.listing.reviews || []);
   const [newReview, setNewReview] = useState({
@@ -29,7 +29,7 @@ const Show = () => {
       setLoading(false);
     }
   }, [id]);
-  useEffect(()=>{},[reviews]);
+  useEffect(() => {}, [reviews]);
 
   const fetchListing = async () => {
     try {
@@ -57,10 +57,9 @@ const Show = () => {
       await createReview(newReview);
       const allReviews = await fetchReviews(id);
       setReviews(allReviews);
-      
-      
+
       // Optionally update reviews state here if needed
-      navigate(`/listing/${id}`)
+      navigate(`/listing/${id}`);
     } catch (error) {
       console.log(error);
     }
@@ -90,30 +89,36 @@ const Show = () => {
   if (!listing) return <p className="text-center mt-10">Listing not found.</p>;
 
   return (
-    <div className="min-h-screen bg-gray-50 py-10 px-4 flex flex-col items-center">
-      <div className="max-w-3xl w-full bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 mt-20">
+    <div className="min-h-screen bg-gray-50 py-12 px-4 flex justify-center">
+      <div className="max-w-3xl w-full bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden mt-16">
+        {/* Image */}
         <div className="relative">
           <img
             src={listing.image}
             alt={listing.title}
-            className="w-full h-72 object-cover rounded-t-2xl"
+            className="w-full h-72 object-cover"
           />
+
           <button
             onClick={() => navigate(-1)}
-            className="absolute top-4 left-4 bg-white/80 backdrop-blur-sm px-3 py-2 rounded-full text-gray-600 hover:text-gray-900 shadow-md transition"
+            className="absolute top-4 left-4 bg-white/80 px-3 py-2 rounded-full backdrop-blur-md shadow hover:bg-white transition"
           >
-            <ArrowLeft className="h-5 w-5" />
+            <ArrowLeft className="h-5 w-5 text-gray-600" />
           </button>
         </div>
 
+        {/* Content */}
         <div className="p-8">
-          <div className="flex justify-between items-start">
+          {/* Title + Actions */}
+          <div className="flex justify-between flex-wrap gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-800 mb-2">
+              <h1 className="text-3xl font-bold text-gray-800">
                 {listing.title}
               </h1>
-              <p className="text-gray-500 text-sm flex items-center gap-1">
-                <MapPin className="h-4 w-4 text-gray-400" /> {listing.location}
+
+              <p className="text-gray-500 text-sm mt-1 flex items-center gap-1">
+                <MapPin className="h-4 w-4 text-gray-400" />
+                {listing.location}
               </p>
             </div>
 
@@ -121,13 +126,14 @@ const Show = () => {
               <div className="flex gap-2">
                 <button
                   onClick={() => navigate(`/listing/edit/${listing.id}`)}
-                  className="flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg text-sm transition"
+                  className="flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-md text-sm shadow-sm transition"
                 >
                   <Edit className="h-4 w-4" /> Edit
                 </button>
+
                 <button
                   onClick={handleDelete}
-                  className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg text-sm transition"
+                  className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-md text-sm shadow-sm transition"
                 >
                   <Trash2 className="h-4 w-4" /> Delete
                 </button>
@@ -135,11 +141,13 @@ const Show = () => {
             )}
           </div>
 
-          <p className="text-gray-700 leading-relaxed mt-5 mb-8">
+          {/* Description */}
+          <p className="text-gray-700 text-base leading-relaxed mt-6 mb-6">
             {listing.description}
           </p>
 
-          <div className="flex justify-between items-center border-t border-gray-100 pt-4">
+          {/* Price + Date */}
+          <div className="flex justify-between items-center border-t pt-4">
             <span className="text-2xl font-semibold text-[rgb(249,50,54)]">
               ₹{listing.price}
             </span>
@@ -148,15 +156,24 @@ const Show = () => {
             </span>
           </div>
 
+          {/* Reviews Section */}
           <div className="mt-10 border-t pt-6">
-            <h2 className="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
-              <Star className="h-5 w-5 text-yellow-500" /> Reviews
+            <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <Star className="h-5 w-5 text-yellow-500" />
+              Reviews
             </h2>
-            <div className="space-y-4">
-              {reviews.map((r) => (
-                <ReviewCard r={r} key={r.id} />
-              ))}
-            </div>
+
+            {reviews.length === 0 ? (
+              <p className="text-gray-500 text-sm">No reviews yet.</p>
+            ) : (
+              <div className="space-y-4">
+                {reviews.map((r) => (
+                  <ReviewCard r={r} key={r.id} />
+                ))}
+              </div>
+            )}
+
+            {/* Add Review */}
             {user && (
               <form
                 onSubmit={handleReviewSubmit}
@@ -166,7 +183,7 @@ const Show = () => {
                   name="rating"
                   value={newReview.rating}
                   onChange={handleChange}
-                  className="p-2 border rounded-lg text-sm"
+                  className="p-2 border rounded-lg text-sm focus:ring-[rgb(249,50,54)]"
                   required
                 >
                   <option value="">Select rating</option>
@@ -182,7 +199,7 @@ const Show = () => {
                   placeholder="Write your review..."
                   value={newReview.comment}
                   onChange={handleChange}
-                  className="p-3 border rounded-lg text-sm focus:ring-1 focus:ring-[rgb(249,50,54)]"
+                  className="p-3 border rounded-lg text-sm focus:ring-[rgb(249,50,54)] min-h-[80px]"
                   required
                 />
 
