@@ -12,9 +12,35 @@ const NewListing = () => {
     description: "",
     location: "",
     price: "",
-    image: "",
+    image: null,
     userId: user?.id,
   });
+
+    const handleImage = async(event) =>{
+        const file = event.target.files[0];
+
+        if(!file)return
+
+        const data = new FormData();
+        data.append("file" , file)
+        data.append("upload_preset" ,import.meta.env.VITE_UPLOAD_PRESET )
+        data.append("cloud_name" , import.meta.env.VITE_CLOUD_NAME)
+    
+        
+     
+
+        const res = await fetch(import.meta.env.VITE_CLOUDINARY_URL , {
+            method : "POST",
+            body : data
+        })
+        const uploadImageUrl = await res.json();
+       console.log(uploadImageUrl);
+        setFormData({ ...formData, [event.target.name]: uploadImageUrl });
+        console.log(formData.image);
+        
+       
+        
+    }
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -109,15 +135,15 @@ const NewListing = () => {
             </div>
 
             <div className="flex-1 mt-4 sm:mt-0">
-              <label className="block text-gray-700 text-sm font-medium mb-1">
-                Image URL
+              <label for="image" className="block text-gray-700 text-sm font-medium mb-1">
+                upload Image
               </label>
               <input
-                type="text"
+                type="file"
                 name="image"
                 placeholder="https://example.com/image.jpg"
-                value={formData.image}
-                onChange={handleChange}
+                
+                onChange={handleImage}
                 className="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[rgb(249,50,54)] outline-none transition"
                 required
               />
@@ -128,7 +154,7 @@ const NewListing = () => {
           {formData.image && (
             <div className="mt-4">
               <img
-                src={formData.image}
+                src={formData.image.secure_url}
                 alt="Preview"
                 className="rounded-xl shadow-sm w-full h-56 object-cover border"
               />
