@@ -31,7 +31,7 @@ const Login = () => {
         : await loginUser({ email, password });
       const { user, token } = res;
       localStorage.setItem("auth", JSON.stringify({ user, token }));
-      console.log("Token : ",token);
+      // console.log("Token : ",token);
       
       setUser(user);
       // {

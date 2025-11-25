@@ -56,9 +56,7 @@ const Show = () => {
     try {
       await createReview(newReview);
       const allReviews = await fetchReviews(id);
-      console.log("All the reviews : ",allReviews);
       setReviews(allReviews);
-      console.log("Reviews var " ,reviews);
       
       
       // Optionally update reviews state here if needed

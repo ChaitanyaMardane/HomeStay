@@ -12,7 +12,6 @@ const getAllListings = async () => {
 };
 
 const createListing = async (data) => {
-  console.log("create ;isting data ", data);
   
   try {
     const response = await API.post("/api/listings", data);
@@ -23,11 +22,9 @@ const createListing = async (data) => {
   }
 };
 const getListingById = async (id) => {
-  console.log(id);
   
   try {
     const response = await API.get(`/api/listings/${id}`);
-    console.log("response from service:", response);
     return response.data;
   } catch (error) {
     console.error("Error fetching listing:", error);

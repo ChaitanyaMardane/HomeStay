@@ -26,11 +26,10 @@ const createReview = async (data) => {
   }
 };
 const getAllReviews = async (id) => {
-  console.log("this is losting ",id);
   
   try {
     const response = await API.get(`/api/${id}/reviews`);
-    console.log("response from service: for reviws ", response.data);
+    // console.log("response from service: for reviws ", response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching listing:", error);
