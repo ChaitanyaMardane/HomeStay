@@ -18,17 +18,17 @@ const Home = () => {
     }
   };
   useEffect(() => {
+    window.scrollTo(0,0);
     fetchListings();
-  }, [listingData]);
-  useEffect(() => {}, [listingData]);
+  }, []);
   if (loading) return <p className="text-center mt-20">Loading listings...</p>;
   return (
    <div className="container mx-auto px-6">
-  <h1 className="font-bold text-3xl mt-20 mb-6 text-gray-800">
+  <h1 className="font-bold text-3xl mt-20 mb-6 ml-20 lg:text-start md:text-satrt sm:text-center  text-gray-800">
     Listings
   </h1>
 
-  <div className="flex flex-wrap justify-center sm:justify-start gap-6">
+  <div className="flex flex-wrap justify-evenly  sm:justify-evenly gap-3  md:gap-3 lg:gap-6">
     {listingData.map((listing) => (
       <ListingCard key={listing.id} listing={listing} />
     ))}

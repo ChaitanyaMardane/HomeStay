@@ -12,6 +12,7 @@ const EditForm = () => {
     const fetchData = async () => {
       const listing = await getListingById(id);
       setFormData(listing);
+      window.scrollTo(0,0);
     };
     fetchData();
   }, [id]);

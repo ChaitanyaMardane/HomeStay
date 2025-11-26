@@ -1,6 +1,8 @@
 import React from 'react'
 
 const ReviewCard = ({r}) => {
+  console.log("review" , r);
+  
   return (
    <div key={r.id} className="p-4 border rounded-xl bg-gray-50">
                 <div className="flex items-center justify-between mb-1">
@@ -8,7 +10,7 @@ const ReviewCard = ({r}) => {
                     {r.user?.username || "Anonymous"}
                   </span>
                   <span className="text-yellow-500 text-sm">
-                    {"⭐".repeat(4)}
+                    {"⭐".repeat(r.rating)}
                   </span>
                 </div>
                 <p className="text-gray-700 text-sm">{r.comment}</p>

@@ -2,7 +2,7 @@ import prisma from "../prisma/client.js";
 
 export const createListing = async (req, res) => {
   const { title, description, location, price, image, userId } = req.body;
-  console.log(req.body);
+  console.log(title , description,image);
   
   const priceNumber = Number(price);
 

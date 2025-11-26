@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, {  useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { PlusCircle } from "lucide-react";
+import {  PlusCircle } from "lucide-react";
 import { createListing } from "../services/listingService";
 import { useAuth } from "../Context/AuthContextCreation";
+import Loader from "../Components/Loader";
 
 const NewListing = () => {
   const navigate = useNavigate();
+  
   const {user}= useAuth();
   const [formData, setFormData] = useState({
     title: "",
@@ -15,6 +17,7 @@ const NewListing = () => {
     image: "",
     userId: user?.id,
   });
+  const [uploading , setUploading] = useState(false);
 
     const handleImage = async(event) =>{
         const file = event.target.files[0];
@@ -28,11 +31,12 @@ const NewListing = () => {
     
         
      
-
+        setUploading(true)
         const res = await fetch(import.meta.env.VITE_CLOUDINARY_URL , {
             method : "POST",
             body : data
         })
+        
         const {url} = await res.json();
        console.log(url);
         setFormData({ ...formData, [event.target.name]: url });
@@ -144,7 +148,6 @@ const NewListing = () => {
                 type="file"
                 name="image"
                 placeholder="https://example.com/image.jpg"
-                
                 onChange={handleImage}
                 className="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[rgb(249,50,54)] outline-none transition"
                 required
@@ -153,15 +156,25 @@ const NewListing = () => {
           </div>
 
           {/* Preview */}
-          {formData.image && (
+           
             <div className="mt-4">
-              <img
-                src={formData.image}
+              {uploading&&(
+              (formData.image) ?
+              (<img
+                src={formData.image }
                 alt="Preview"
                 className="rounded-xl shadow-sm w-full h-56 object-cover border"
-              />
+              />):(
+              
+                <div className="rounded-xl shadow-sm w-full h-56 object-cover border flex justify-center items-center">
+                <Loader ></Loader>
+
+                </div>
+              )
+            )
+            }
             </div>
-          )}
+          
 
           {/* Submit Button */}
           <button

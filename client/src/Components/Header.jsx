@@ -6,7 +6,9 @@ import { useAuth } from "../Context/AuthContextCreation.js";
 const Header = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
-  useEffect(() => {}, [user]);
+  useEffect(() => {
+    
+  }, [user]);
 
   const handleLogin = (e) => {
     if (e.target.innerText == "LogOut") {
@@ -37,18 +39,19 @@ const Header = () => {
       </div>
 
       {/* Search Bar (Desktop) */}
-      <div className="hidden lg:flex flex-1 max-w-md relative bg-gray-100 rounded-full shadow-sm">
+      {/* <div className="hidden lg:flex flex-1 max-w-md relative bg-gray-100 rounded-full shadow-sm">
         <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
         <input
           type="text"
           placeholder="Search destinations, cities..."
           className="pl-12 pr-4 py-2 w-full rounded-full bg-gray-100 focus:ring-2 focus:ring-[rgb(249,50,54)] text-sm text-gray-700 placeholder-gray-400 outline-none transition"
         />
-      </div>
+      </div> */}
 
-      {/* Host Button */}
+<div>
+  {/* Host Button */}
       <button
-        className="bg-gray-100 hover:bg-gray-200 px-5 py-2 rounded-full text-sm font-medium text-gray-700 cursor-pointer transition whitespace-nowrap shadow-sm"
+        className="bg-gray-100 hover:bg-gray-200 px-5 py-2 rounded-full text-sm m-4 font-medium text-gray-700 cursor-pointer transition whitespace-nowrap shadow-sm"
         onClick={() => (user ? navigate("/new_listing") : navigate("/login"))}
       >
         Become a host
@@ -62,16 +65,18 @@ const Header = () => {
         {user ? "LogOut" : "Login"}
       </button>
     </div>
+</div>
+    
 
     {/* Mobile Search Bar */}
-    <div className="lg:hidden mt-4 relative bg-gray-100 rounded-full shadow-sm">
+    {/* <div className="lg:hidden mt-4 relative bg-gray-100 rounded-full shadow-sm">
       <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
       <input
         type="text"
         placeholder="Search destinations, cities..."
         className="pl-12 pr-4 py-2 w-full rounded-full bg-gray-100 focus:ring-2 focus:ring-[rgb(249,50,54)] text-sm text-gray-700 placeholder-gray-400 outline-none transition"
       />
-    </div>
+    </div> */}
   </div>
 </header>
 

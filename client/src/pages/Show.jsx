@@ -22,13 +22,15 @@ const Show = () => {
   });
 
   useEffect(() => {
+    window.scrollTo(0,0);
     setListing(state?.listing);
     if (!listing) {
       fetchListing();
     } else {
       setLoading(false);
     }
-  }, [id]);
+
+  }, []);
   useEffect(() => {}, [reviews]);
 
   const fetchListing = async () => {
@@ -57,6 +59,12 @@ const Show = () => {
       await createReview(newReview);
       const allReviews = await fetchReviews(id);
       setReviews(allReviews);
+      setNewReview({
+    rating: 0,
+    comment: "",
+    userId: user.id,
+    listingId: id,
+  });
 
       // Optionally update reviews state here if needed
       navigate(`/listing/${id}`);
@@ -189,7 +197,7 @@ const Show = () => {
             >
               <option value="">Your rating</option>
               {[1,2,3,4,5].map(r => (
-                <option key={r} value={r}>{r} Star{r>1 && "s"}</option>
+                <option key={r} value={r}>{r} Star{r>=1 && "s"}</option>
               ))}
             </select>
 
