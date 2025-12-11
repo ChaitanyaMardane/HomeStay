@@ -40,9 +40,9 @@ const Footer = () => {
           <div className="flex flex-col gap-3">
             <h3 className="text-gray-800 font-semibold text-lg">Connect</h3>
             <div className="flex gap-4">
-              <Link to="#" ><Linkedin className="h-6 w-6 text-gray-600 hover:text-[rgb(249,50,54)] cursor-pointer transition" /></Link>
-              <Link><Instagram className="h-6 w-6 text-gray-600 hover:text-[rgb(249,50,54)] cursor-pointer transition" /></Link>
-              <Link><Github className="h-6 w-6 text-gray-600 hover:text-[rgb(249,50,54)] cursor-pointer transition" /></Link>
+              <Linkedin className="h-6 w-6 text-gray-600 hover:text-[rgb(249,50,54)] cursor-pointer transition" />
+              <Instagram className="h-6 w-6 text-gray-600 hover:text-[rgb(249,50,54)] cursor-pointer transition" />
+              <Github className="h-6 w-6 text-gray-600 hover:text-[rgb(249,50,54)] cursor-pointer transition" />
             
             </div>
           </div>
