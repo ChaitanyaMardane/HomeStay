@@ -83,7 +83,7 @@ use cors to handle cors  error
    npm run dev
 
    # Start backend (from server directory)
-   npm start
+   npm run dev
    ```
 
 ## Development Status
@@ -93,4 +93,6 @@ use cors to handle cors  error
 - ✅ Authentication system
 - ✅ Property listing components
 - ✅ CORS configuration
-- 🚧 Review system (In Progress)
+- ✅ Review system (In Progress)
+- 🚧 Apply Pagination
+- 🚧 Filteration and Searching Funtionalities
