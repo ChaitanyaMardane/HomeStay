@@ -47,6 +47,10 @@ const NewListing = () => {
     }
 
   const handleChange = (e) => {
+    if(e.target.name==="price"){
+      setFormData({ ...formData, [e.target.name]: Number(e.target.value) });
+      return;
+    }
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 

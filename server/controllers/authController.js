@@ -3,51 +3,58 @@ import jwt from "jsonwebtoken";
 import prisma from "../prisma/client.js";
 import dotenv from "dotenv";
 import { generateToken } from "../utils/generateToken.js";
+import { registerUserSchema } from "../validators/user.validation.js"
+import { loginUserSchema } from "../validators/user.validation.js";
 dotenv.config();
 
-export const register = async (req, res) => {
-  const { username, email, password } = req.body;
-
-  if (!username || !email || !password) {
-    return res.status(400).json({ message: "All fields are required" });
-  }
-  const existingUser = await prisma.User.findUnique({ where: { email } });
-  if (existingUser)
-    return res.status(400).json({ message: "Email already registered" });
-
+export const register = async (req, res, next) => {
   try {
+    // 1. Validate input (throws ZodError if invalid)
+    const { username, email, password } =
+      registerUserSchema.parse(req.body);
+
+    // 2. Check existing user
+    const existingUser = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (existingUser) {
+      return res.status(400).json({
+        message: "Email already registered",
+      });
+    }
+
+    // 3. Hash password
     const salt = await bcrypt.genSalt(10);
+
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const user = await prisma.User.create({
+    // 4. Create user
+    const user = await prisma.user.create({
       data: { username, email, password: hashedPassword },
     });
 
-    if (user) {
-      const token = generateToken(user);
+    // 5. Generate token
+    const token = generateToken(user);
 
-      res.status(201).json({
-        message: "User Registered Successfully",
-        user: {
-          id: user.id,
-          username: user.username,
-          email: user.email,
-        },
-        token,
-      });
-    } else {
-      return next(createError(400, "Invalid user data , user not created"));
-    }
+    res.status(201).json({
+      message: "User Registered Successfully",
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+      },
+      token,
+    });
   } catch (error) {
-    return res.status(500).json({ message: "Internal server error" });
+    next(error); // Zod + Prisma errors go to global handler
   }
 };
 
-export const login = async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return res.status(400).json({ message: "All fields are required" });
-  }
+export const login = async (req, res,next) => {
+  try {
+    const {  email, password } =
+      loginUserSchema.parse(req.body);
 
   const user = await prisma.User.findUnique({ where: { email: email } });
 
@@ -68,6 +75,10 @@ export const login = async (req, res) => {
     },
     token,
   });
+  } catch (error) {
+    next(error); // Zod errors go to global handler
+  }
+
 };
 
 export const protectRoute = async (req, res, next) => {

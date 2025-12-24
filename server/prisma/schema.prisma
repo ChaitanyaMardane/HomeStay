@@ -38,7 +38,7 @@ model Listing {
   id          String @id @default(uuid())
   title       String
   description String
-  price       Float
+  price       Float @db.DoublePrecision
   location    String
   image       String?
   // category    Category   @default(CITY)
@@ -50,13 +50,14 @@ model Listing {
 
 model Review {
   id         String @id @default(uuid())
-  rating     Int
+  rating     Int @db.SmallInt
   comment    String
   createdAt  DateTime @default(now())
   userId     String
   listingId  String
   user       User     @relation(fields: [userId], references: [id] , onDelete: Cascade)
   listing    Listing  @relation(fields: [listingId], references: [id] , onDelete: Cascade)
+ 
 }
 
 // INSERT INTO "Review" (rating, comment, "userId", "listingId")

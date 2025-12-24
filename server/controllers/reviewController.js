@@ -1,11 +1,16 @@
+import { createReviewSchema } from "../validators/review.validation.js";
 import prisma from "../prisma/client.js";
+import { tr } from "zod/v4/locales";
 
 export const createReview = async (req, res) => {
     console.log("in backend");
+    try {
+    const validationResult = createReviewSchema.parse(req.body);
+    console.log("validationResult",validationResult.data);
     
-  const { userId, listingId, comment, rating } = req.body;
+  const { userId, listingId, comment, rating } = validationResult.data;
   console.log( "review recieved in backend",req.body)
-  try {
+  
     const newReview = await prisma.Review.create({
       data: {
         userId,
@@ -20,7 +25,7 @@ console.log("Review Created Successfully : ",newReview);
     .json({ message: "Review created successfully", review: newReview });
 
   } catch (error) {
-    console.log( "Error in creating review :", error);
+    console.log( "Error in creating review :", error.errors.message);
     res.status(500).json("Error " , error)
     
   }

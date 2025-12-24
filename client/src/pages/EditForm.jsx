@@ -24,6 +24,10 @@ const EditForm = () => {
     navigate("/listing/" + id);
   };
   const handleChange = (e) => {
+    if(e.target.name==="price"){
+      setFormData({ ...formData, [e.target.name]: Number(e.target.value) });
+      return;
+    }
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };

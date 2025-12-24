@@ -4,6 +4,8 @@ import cors from "cors";
 import authRoutes from "./routes/authRoutes.js";
 import listingRoutes from "./routes/listingRoutes.js";
 import reviewRoutes from "./routes/reviewsRouters.js"
+import { errorHandler } from "./middlewares/error.middleware.js";
+
 
 dotenv.config(); // Load env variables
 
@@ -26,6 +28,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/listings", listingRoutes);
 app.use("/api/:lid/reviews/",reviewRoutes)
+app.use(errorHandler); // Global error handler
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT} : http://localhost:${PORT}`);

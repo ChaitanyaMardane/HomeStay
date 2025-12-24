@@ -74,7 +74,13 @@ const Show = () => {
   };
 
   const handleChange = (e) => {
+   
     const { name, value } = e.target;
+     if(name==="rating"){
+     
+      setNewReview({ ...newReview, [name]: Number(value) });
+      return;
+    }
     setNewReview({ ...newReview, [name]: value });
   };
 
@@ -195,7 +201,7 @@ const Show = () => {
               className="p-3 border rounded-lg text-sm focus:ring-[rgb(249,50,54)] bg-gray-50"
               required
             >
-              <option value="">Your rating</option>
+              <option >Your rating</option>
               {[1,2,3,4,5].map(r => (
                 <option key={r} value={r}>{r} Star{r>=1 && "s"}</option>
               ))}
